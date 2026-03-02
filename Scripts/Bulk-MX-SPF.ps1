@@ -12,22 +12,44 @@
 ############################################################################
 
 <#
-Author: Ernesto Cobos Roqueñí
-Name: Bulk-MX-SPF-Report.ps1
-Version: 5.3.4
-Date: 02/18/2026
+.SYNOPSIS
+    Bulk domain health checker — MX, SPF, DKIM, DMARC, and MTA-STS analysis.
+
+.DESCRIPTION
+    Reads a CSV of domains, resolves DNS records, checks email authentication
+    posture, and generates a Bootstrap-styled HTML report.
+
+.PARAMETER CsvPath
+    Path to the input CSV file containing domain names.
+
+.PARAMETER OutputFolder
+    Folder where the HTML report will be saved. Created automatically if missing.
+
+.AUTHOR
+    Ernesto Cobos Roqueñí
+
+.VERSION
+    5.3.4 - 02/18/2026
 #>
 
 #Requires -RunAsAdministrator
+
+param(
+    [Parameter(Mandatory = $false)]
+    [string]$CsvPath = "C:\Scripts\MDO\AcceptedDomains.csv",
+
+    [Parameter(Mandatory = $false)]
+    [string]$OutputFolder = "C:\Scripts\MDO"
+)
 
 # 1. Clear DNS Cache
 Clear-DnsClientCache
 
 # 2. Path Settings
-$csvPath = "C:\Users\ecobos\OneDrive - Microsoft\ecobos\Documents\05 Scripts\Sender Authentication Bulk\AcceptedDomains.csv"
-$reportPath = "C:\Users\ecobos\OneDrive - Microsoft\ecobos\Documents\05 Scripts\Sender Authentication Bulk\Bulk_HealthCheck_$(Get-Date -Format 'MMddyy_HHmm').html"
-
-if (-not (Test-Path "C:\Users\ecobos\OneDrive - Microsoft\ecobos\Documents\05 Scripts\Sender Authentication Bulk")) { New-Item -Path "C:\Users\ecobos\OneDrive - Microsoft\ecobos\Documents\05 Scripts\Sender Authentication Bulk" -ItemType Directory -Force }
+if (-not (Test-Path $OutputFolder)) {
+    New-Item -Path $OutputFolder -ItemType Directory -Force | Out-Null
+}
+$reportPath = Join-Path -Path $OutputFolder -ChildPath "Bulk_HealthCheck_$(Get-Date -Format 'MMddyy_HHmm').html"
 
 # 3. Module Verification
 Write-Host "--- Reviewing Requirements ---" -f Yellow
@@ -37,20 +59,22 @@ foreach ($mod in $modules) {
         Write-Host "Installing $mod..." -f Cyan
         Install-Module $mod -Force -Confirm:$false -Scope CurrentUser
     }
-    Import-Module $mod -ErrorAction SilentlyContinue
+    if (-not (Import-Module $mod -ErrorAction SilentlyContinue -PassThru)) {
+        Write-Host "  WARNING: Could not import $mod. Some checks may be skipped." -f Yellow
+    }
 }
 
 # 4. Import and Initialization
-if (-not (Test-Path $csvPath)) {
-    Write-Host "CRITICAL ERROR: CSV file not found at $csvPath" -f Red
+if (-not (Test-Path $CsvPath)) {
+    Write-Host "CRITICAL ERROR: CSV file not found at $CsvPath" -f Red
     return
 }
-$firstLine = Get-Content $csvPath -TotalCount 1
+$firstLine = Get-Content $CsvPath -TotalCount 1
 $detectedDelimiter = ","
 if ($firstLine -like "*;*") { $detectedDelimiter = ";" }
-$csvData = Import-Csv $csvPath -Delimiter $detectedDelimiter
+$csvData = Import-Csv $CsvPath -Delimiter $detectedDelimiter
 
-$results = @()
+$results = [System.Collections.Generic.List[PSObject]]::new()
 $totalDomains = 0
 $spfIssues = 0 ; $dkimIssues = 0 ; $dmarcIssues = 0 ; $mtaIssues = 0
 
@@ -133,9 +157,14 @@ foreach ($row in $csvData) {
         }
 
         # --- MTA-STS ---
-        $mtaAuth = Get-MailPolicyAuth -Domain $domain -ErrorAction SilentlyContinue
+        $mtaAuth = $null
         $mtaInfo = [PSCustomObject]@{ DnsTtl="N/A"; Version="N/A"; Mode="N/A"; MaxAge="N/A"; MX="N/A" }
-        if ($null -ne $mtaAuth.MTA_STS) {
+        if (Get-Command -Name Get-MailPolicyAuth -ErrorAction SilentlyContinue) {
+            $mtaAuth = Get-MailPolicyAuth -Domain $domain -ErrorAction SilentlyContinue
+        } else {
+            Write-Host "  [!] Get-MailPolicyAuth not available. Skipping MTA-STS for $domain" -f Yellow
+        }
+        if ($null -ne $mtaAuth -and $null -ne $mtaAuth.MTA_STS) {
             if($mtaAuth.MTA_STS.DnsTtl){$mtaInfo.DnsTtl = $mtaAuth.MTA_STS.DnsTtl}
             if($mtaAuth.MTA_STS.Version){$mtaInfo.Version = $mtaAuth.MTA_STS.Version}
             if($mtaAuth.MTA_STS.Mode){$mtaInfo.Mode = $mtaAuth.MTA_STS.Mode}
@@ -265,85 +294,118 @@ foreach ($r in $results) {
 }
 
 $htmlFooter = @"
+<!-- Note -->
         <div class="alert alert-secondary text-center mt-4">
-        💡 <strong>Note:</strong> Security Advisory issues and character limits (SPF Length > 255) are highlighted in <span class="text-danger fw-bold">Red</span>.
-    </div>   
-    <div class="card shadow-sm border-primary mb-4">
-        <div class="card-header text-white" style="background-color: #0078d4;">📝 Action Items & Microsoft Recommendations</div>
-        <div class="card-body">
-            <ul>
-                <li><strong>Reduce SPF record length (max 255 chars)</strong> - <a href="https://www.rfc-editor.org/rfc/rfc7208" target="_blank">https://www.rfc-editor.org/rfc/rfc7208</a></li>
-                <li><strong>SPF Record Syntax</strong> - <a href="http://www.open-spf.org/SPF_Record_Syntax/" target="_blank">http://www.open-spf.org/SPF_Record_Syntax/</a></li>
-                <li><strong>Implement DKIM record:</strong> <a href="https://dkim.org/" target="_blank">https://dkim.org/</a></li>
-                <li><strong>Upgrade DMARC policy from 'none' to 'reject'</strong> - <a href="https://www.rfc-editor.org/rfc/rfc7489.html" target="_blank">https://www.rfc-editor.org/rfc/rfc7489.html</a></li>
-                <li><strong>DMARC Record Syntax: Every Tag and Parameter Explained</strong> - <a href="https://dmarccreator.com/resources/dmarc-record-syntax-tags" target="_blank">https://dmarccreator.com/resources/dmarc-record-syntax-tags</a></li>                
-                <li><strong>Implement MTA-TS:</strong> <a href="https://learn.microsoft.com/en-us/purview/enhancing-mail-flow-with-mta-sts" target="_blank">Microsoft Configuration Guide</a></li>
-                <li><strong>DNS Propagation and TTL Explained: Why DNS Changes Take Time:</strong> <a href="https://www.whatsmyiplive.com/blog/dns-propagation-and-ttl.html" target="_blank">https://www.whatsmyiplive.com/blog/dns-propagation-and-ttl.html</a></li>
-                <li><strong>If you find any issue, perform a double check with EmailAuthChecker using the following command Start-EmailAuthChecker</strong> <a href="https://www.linkedin.com/posts/abdullah-al-zmaili-57496128_i-am-excited-to-share-that-i-have-developed-activity-7358838297034407936-tM70" target="_blank">Introducing EmailAuthChecker: A PowerShell Tool for Email Security</a></li>                
-            </ul>
+            &#128161; <strong>Note:</strong> Security advisory issues and character limits (SPF Length &gt; 255) are highlighted in <span class="text-danger fw-bold">Red</span>.
         </div>
-    </div>
 
-    <div class="card shadow-sm border-info">
-        <div class="card-header text-white" style="background-color: #0078d4;">📚 Microsoft Official Documentation</div>
-        <div class="card-body">            
-            <div class="list-group">
-                <a href="https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-spf-configure" class="list-group-item list-group-item-action" target="_blank">🔗 SPF Setup Guide</a>
-                <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-spf-configure#scenario-parked-domains" class="list-group-item list-group-item-action" target="_blank">🔗 SPF Setup Parked domains</a>
-                <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider?view=o365-worldwide&tabs=domain-connect" class="list-group-item list-group-item-action" target="_blank">🔗 Connect your domain by adding DNS records</a>
-                <a href="https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dkim-configure" class="list-group-item list-group-item-action" target="_blank">🔗 DKIM Setup Guide</a>
-                <a href="https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dmarc-configure" class="list-group-item list-group-item-action" target="_blank">🔗 DMARC Setup Guide</a>
-                <a href="https://learn.microsoft.com/en-us/purview/enhancing-mail-flow-with-mta-sts" class="list-group-item list-group-item-action" target="_blank">🔗 MTA-STS Enhancing mail flow with MTA-STS</a>
-                <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-arc-configure" class="list-group-item list-group-item-action" target="_blank">🔗 Configure trusted ARC sealers</a>
-                <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure#use-the-microsoft-365-admin-center-to-add-dmarc-txt-records-for-onmicrosoftcom-domains-in-microsoft-365" class="list-group-item list-group-item-action" target="_blank">🔗 Use the Microsoft 365 admin center to add DMARC TXT records for *.onmicrosoft.com domains in Microsoft 365</a>
-                <a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure#dmarc-txt-records-for-parked-domains-in-microsoft-365" class="list-group-item list-group-item-action" target="_blank">🔗 DMARC TXT records for parked domains in Microsoft 365</a>
-                <a href="https://mha.azurewebsites.net/" class="list-group-item list-group-item-action" target="_blank">🔗 Message Header Analyzer</a>
+        <!-- Action Items & Microsoft Recommendations -->
+        <div class="card shadow-sm border-primary mb-4">
+            <div class="card-header text-white" style="background-color: #0078d4;">&#128221; Action Items &amp; Microsoft Recommendations</div>
+            <div class="card-body">
+                <div class="list-group">
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Reduce SPF record length (max 255 chars)</strong><br>
+                        <small><a href="https://www.rfc-editor.org/rfc/rfc7208" target="_blank" class="link-docs">&#128218; RFC 7208</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; SPF Record Syntax</strong><br>
+                        <small><a href="http://www.open-spf.org/SPF_Record_Syntax/" target="_blank" class="link-docs">&#128218; open-spf.org</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Implement DKIM record</strong><br>
+                        <small><a href="https://dkim.org/" target="_blank" class="link-docs">&#128218; dkim.org</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; List of DKIM selectors</strong><br>
+                        <small><a href="https://www.syskeo.com/en/resources/dkim" target="_blank" class="link-docs">&#128218; syskeo.com</a></small>
+                    </div>                    
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Upgrade DMARC policy from 'none' to 'reject'</strong><br>
+                        <small><a href="https://www.rfc-editor.org/rfc/rfc7489.html" target="_blank" class="link-docs">&#128218; RFC 7489</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; DMARC Record Syntax: Every Tag and Parameter Explained</strong><br>
+                        <small><a href="https://dmarccreator.com/resources/dmarc-record-syntax-tags" target="_blank" class="link-docs">&#128218; dmarccreator.com</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; SMTP MTA Strict Transport Security (MTA-STS)</strong><br>
+                        <small><a href="https://www.rfc-editor.org/rfc/rfc8461" target="_blank" class="link-docs">&#128218; RFC 8461</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Implement MTA-STS</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/purview/enhancing-mail-flow-with-mta-sts" target="_blank" class="link-docs">&#128218; Microsoft Configuration Guide</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; DNS Propagation and TTL Explained</strong><br>
+                        <small><a href="https://www.whatsmyiplive.com/blog/dns-propagation-and-ttl.html" target="_blank" class="link-docs">&#128218; whatsmyiplive.com</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Double check with EmailAuthChecker: Start-EmailAuthChecker</strong><br>
+                        <small><a href="https://www.linkedin.com/posts/abdullah-al-zmaili-57496128_i-am-excited-to-share-that-i-have-developed-activity-7358838297034407936-tM70" target="_blank" class="link-docs">&#128218; Introducing EmailAuthChecker</a></small>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>  
 
+        <!-- Microsoft Official Documentation -->
+        <div class="card shadow-sm border-info mb-4">
+            <div class="card-header text-white" style="background-color: #0078d4;">&#128218; Microsoft Official Documentation</div>
+            <div class="card-body">
+                <div class="list-group">
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; SPF Setup Guide</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-spf-configure" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; SPF Setup Parked Domains</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-spf-configure#scenario-parked-domains" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Connect your domain by adding DNS records</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider?view=o365-worldwide&tabs=domain-connect" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; DKIM Setup Guide</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dkim-configure" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; DMARC Setup Guide</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dmarc-configure" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; MTA-STS Enhancing mail flow</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/purview/enhancing-mail-flow-with-mta-sts" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Configure trusted ARC sealers</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-arc-configure" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; DMARC TXT records for *.onmicrosoft.com</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure#use-the-microsoft-365-admin-center-to-add-dmarc-txt-records-for-onmicrosoftcom-domains-in-microsoft-365" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; DMARC TXT records for parked domains</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dmarc-configure#dmarc-txt-records-for-parked-domains-in-microsoft-365" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Message Header Analyzer</strong><br>
+                        <small><a href="https://mha.azurewebsites.net/" target="_blank" class="link-docs">&#128218; Documentaci&oacute;n</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>        
+      
+        <!-- Footer -->
+        <div class="text-center py-4"><p>chiringuito365.com&reg; | Internal Tools 2026</p></div>
 
-    <div class="card shadow-sm mt-4">
-        <div class="card-header text-white" style="background-color: #0078d4;">🔍 Common DKIM Selectors Reference</div>
-        <div class="card-body p-0">
-            <table class="table table-sm table-striped mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="ps-4">Selector</th>
-                        <th>Vendor / Provider</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td class="ps-4">selector1/selector2</td><td>Microsoft 365</td></tr>
-                    <tr><td class="ps-4">google</td><td>Google Workspace</td></tr>
-                    <tr><td class="ps-4">google1/google2</td><td>Google Workspace (Rotation)</td></tr>                    
-                    <tr><td class="ps-4">key1/key2</td><td>Everlytic</td></tr>
-                    <tr><td class="ps-4">eversrv</td><td>Everlytic (Deprecated)</td></tr>
-                    <tr><td class="ps-4">k1/ k2</td><td>Mailchimp / Mandrill</td></tr>
-                    <tr><td class="ps-4">mxvault</td><td>Global Micro</td></tr>
-                    <tr><td class="ps-4">dkim</td><td>Hetzner</td></tr>
-                    <tr><td class="ps-4">s1/s2</td><td>Sendgrid</td></tr>
-                    <tr><td class="ps-4">k1/k2/mg/mailo/s1/s2 </td><td>Mailgun</td></tr>
-                    <tr><td class="ps-4">selector1/selector2/s1/s2</td><td>Amazon SES</td></tr>
-                    <tr><td class="ps-4">selector1/selector2/s1/s2/pp</td><td>Proofpoint</td></tr>
-                    <tr><td class="ps-4">selector1/selector2/s1/s2/mimecast</td><td>Mimecast</td></tr>
-                    <tr><td class="ps-4">s1/s2/selector1/selector2</td><td>Cisco ESA</td></tr>
-                    <tr><td class="ps-4">s1/s2/selector1/selector2/mta/et</td><td>Salesforce MC</td></tr>
-                    <tr><td class="ps-4">zendesk1/zendesk2/s1/s2</td><td>Zendesk</td></tr>
-                    <tr><td class="ps-4">hs1/hs2/hubspot/s1/s2</td><td>HubSpot</td></tr>
-                    <tr><td class="ps-4">zoho/selector1/selector2/s1/s2</td><td>Zoho</td></tr>
-                    <tr><td class="ps-4">fm1/fm2/s1/s2/default</td><td>Fastmail</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="text-center py-4"><p>chiringuito365.com&reg; | Internal Tools 2026</p></div>
-</div>
+    </div><!-- /container -->
 </body>
 </html>
 "@
 
 $finalHtml = $htmlHeader + $htmlBody + $htmlFooter
 $finalHtml | Out-File -FilePath $reportPath -Encoding utf8 -Force
-Write-Host "--- REPORT FINISHED v5.3.3 ---" -f Green
+Write-Host "--- REPORT FINISHED v5.3.4 ---" -f Green
 Invoke-Item $reportPath
