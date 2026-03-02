@@ -1,4 +1,4 @@
-﻿############################################################################
+﻿#############################################################################################
 #This sample script is not supported under any Microsoft standard support program or service.
 #This sample script is provided AS IS without warranty of any kind.
 #Microsoft further disclaims all implied warranties including, without limitation, any implied
@@ -9,7 +9,7 @@
 #damages for loss of business profits, business interruption, loss of business information,
 #or other pecuniary loss) arising out of the use of or inability to use the sample script or
 #documentation, even if Microsoft has been advised of the possibility of such damages.
-############################################################################
+#############################################################################################
 
 <#
 .SYNOPSIS
