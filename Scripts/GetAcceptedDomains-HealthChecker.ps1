@@ -24,6 +24,7 @@
     Ernesto Cobos Roqueñí
 
 .VERSION
+    2.1 -  2/Mar/2026 - Fix bugs
     2.0 - 20/Mar/2025 - Added DomainHealthChecker integration
     1.0 - 12/Mar/2025 - Initial version
 
@@ -51,7 +52,7 @@ foreach ($mod in $requiredModules) {
 }
 
 # --- Output file setup (removes previous run to avoid duplicates) ---
-$outputPath = Join-Path -Path 'C:\Scripts' -ChildPath "AcceptedDomains_$(Get-Date -Format 'yyyyMMdd_HHmmss').csv"
+$outputPath = Join-Path -Path 'C:\Users\ecobos\OneDrive - Microsoft\ecobos\Documents\05 Scripts\Sender Authentication Get AcceptedDomains' -ChildPath "AcceptedDomains_$(Get-Date -Format 'yyyyMMdd_HHmmss').csv"
 
 # --- Connect to Exchange Online ---
 try {
@@ -63,8 +64,22 @@ catch {
 }
 
 try {
-    $ARC = Get-ArcConfig
-    $domains = Get-AcceptedDomain
+    $ARC = $null
+    $arcSealers = 'N/A'
+    $arcModified = 'N/A'
+    try {
+        $ARC = Get-ArcConfig -ErrorAction Stop
+        if ($ARC) {
+            # Discover the correct property names dynamically
+            $arcProps = $ARC | Get-Member -MemberType Properties | Select-Object -ExpandProperty Name
+            $sealerProp = $arcProps | Where-Object { $_ -match 'Sealer|Trusted' } | Select-Object -First 1
+            $modifiedProp = $arcProps | Where-Object { $_ -match 'Modified|Changed|Date|Time' } | Select-Object -First 1
+            if ($sealerProp)  { $arcSealers = $ARC.$sealerProp }
+            if ($modifiedProp) { $arcModified = $ARC.$modifiedProp }
+            Write-Host "ARC config loaded (properties: $($arcProps -join ', '))" -ForegroundColor Green
+        }
+    } catch { Write-Host "Could not retrieve ARC config: $_" -ForegroundColor Yellow }
+    $domains = @(Get-AcceptedDomain)
     $totalDomains = $domains.Count
     $currentIndex = 0
 
@@ -109,8 +124,8 @@ try {
             SPFLength        = $DHC.SPFRecordLength
             DmarcAdvisory    = $DHC.DmarcAdvisory
             DmarcRecord      = $DHC.DmarcRecord
-            ARCTrustedSealers = $ARC.ArcTrustedSealers
-            LastModified     = $ARC.LastModified
+            ARCTrustedSealers = $arcSealers
+            LastModified     = $arcModified
             MtaAdvisory      = $DHC.MtaAdvisory
             MtaRecord        = $DHC.MtaRecord
             DkimAdvisory     = $DHC.DkimAdvisory
