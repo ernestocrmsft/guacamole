@@ -7,12 +7,13 @@
 ---
 
 ## Índice
-1. Resumen ejecutivo  
-2. Reglas básicas de flujo de correo – Microsoft 365  
-3. Control de Seguridad: RejectDirectSend en Exchange Online  
-4. SPF, DKIM, DMARC y MTA-STS  
-5. Runbook SOC – Detección y Respuesta  
-6. Recomendaciones finales Enterprise
+
+1. [Resumen ejecutivo](#1-resumen-ejecutivo)  
+2. [Reglas básicas de flujo de correo – Microsoft 365](#2-reglas-básicas-de-flujo-de-correo--microsoft-365)  
+3. [Control de Seguridad: RejectDirectSend en Exchange Online](#3-control-de-seguridad-rejectdirectsend-en-exchange-online)  
+4. [SPF, DKIM, DMARC y MTA-STS](#4-spf-dkim-dmarc-y-mta-sts)  
+5. [Runbook SOC – Detección y Respuesta](#5-runbook-soc--detección-y-respuesta)  
+6. [Recomendaciones finales Enterprise](#6-recomendaciones-finales-enterprise)
 
 ---
 
