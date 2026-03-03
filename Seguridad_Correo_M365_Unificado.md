@@ -441,9 +441,11 @@ Puedes validar SPF, DKIM, DMARC y MTA-STS con el siguiente script:
 
 ---
 
-# 5. ¿Qué es un “parked domain”?
+# 5.  Dominios estacionados (Parked Domains)
 
-Un **dominio aparcado** es un dominio que:
+**¿Qué es un “parked domain”?**
+
+Un **dominio estacionado** es un dominio que:
 - No tiene servicios activos (web, correo, aplicaciones).
 - Apunta a una página genérica del proveedor (hosting o registrador).
 - No tiene configuraciones explícitas de **DNS**, **seguridad** o **correo**.
