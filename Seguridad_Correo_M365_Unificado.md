@@ -33,7 +33,7 @@ Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo 
 - Evitar el **abuso de dominios técnicos** (por ejemplo: `*.onmicrosoft.com`)
 - Forzar el **cifrado SMTP en tránsito** entre servidores
 
-# Reglas básicas de flujo de correo – Microsoft 365
+# 1. Reglas básicas de flujo de correo – Microsoft 365
 
 A continuación encontrará reglas básicas de flujo de correo que son **altamente recomendadas** agregar para mejorar la postura de seguridad de Microsoft 365.
 
@@ -44,7 +44,7 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
 
 ---
 
-## 1. Regla de flujo de correo para bloquear correos enviados a mydominio.onmicrosoft.com y mydominio.mail.onmicrosoft.com
+## Regla de flujo de correo para bloquear correos enviados a mydominio.onmicrosoft.com y mydominio.mail.onmicrosoft.com
 
 ### Opción 1: Script automatizado descargue el script que ejecuta esta tarea: 
 [Block-onmicrosoftEmails](https://github.com/ernestocrmsft/guacamole/blob/main/Scripts/Block-OnMicrosoftEmails.ps1)
@@ -108,7 +108,8 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
   https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/inspect-message-attachments
 
 ---
-
+" 2. Control de Seguridad: RejectDirectSend en Exchange Online
+---
 ## ¿Qué es Direct Send?
 
 **Direct Send** permite enviar correos a buzones internos del tenant usando:
@@ -220,9 +221,8 @@ Get-OrganizationConfig | Select RejectDirectSend
 ```
 
 ---
----
 
-## 3. SPF, DKIM, DMARC y MTA-STS
+# 3. SPF, DKIM, DMARC y MTA-STS
 
 SPF, DKIM, DMARC y MTA-STS son controles fundamentales de seguridad de correo electrónico que protegen a las organizaciones contra suplantación de identidad (spoofing), phishing, fraude y ataques en tránsito, además de asegurar la entregabilidad del correo legítimo.
 
@@ -440,7 +440,7 @@ Puedes validar SPF, DKIM, DMARC y MTA-STS con el siguiente script:
 
 [Domain-Health-Check.ps1](https://github.com/watchdogcode/gol2026/blob/V2.1/MDO/Scripts/Domain-Health-Check.ps1)
 
-# ¿Qué es un “parked domain”?
+# 4. ¿Qué es un “parked domain”?
 
 Un **dominio aparcado** es un dominio que:
 - No tiene servicios activos (web, correo, aplicaciones).
@@ -534,7 +534,7 @@ En organizaciones grandes es común:
 
 > Esto es **Shadow IT de identidad y marca**, uno de los riesgos más ignorados en seguridad.
  ---
- # RUNBOOK SOC – Direct Send / RejectDirectSend
+ # 5. RUNBOOK SOC – Direct Send / RejectDirectSend
 
 ## Objetivo
 
