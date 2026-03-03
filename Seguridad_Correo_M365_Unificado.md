@@ -8,18 +8,7 @@
 **Nivel:** Técnico / Operativo (Enterprise)  
 **Marco:** Zero Trust – Mail Flow Security
 
-==============================
-``
-
 ---
-``
-
-
-***
-``
-
-___
-``
 
 ## Índice
 1. [Introducción](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#introducci%C3%B3n)
@@ -29,7 +18,6 @@ ___
 5. Dominios estacionados (Parked Domains)
 6. RUNBOOK SOC – Direct Send / RejectDirectSend
 
----
 ---
 # 1. Introducción
 
@@ -44,7 +32,6 @@ Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo 
 
 ---
 > Este setup básico establece los controles mínimos necesarios para proteger la identidad del dominio y garantizar una comunicación de correo electrónico segura y confiable.
----
 ---
 
 # 2. Reglas básicas de flujo de correo – Microsoft 365
@@ -119,7 +106,7 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
 - Inspect message attachments – Microsoft Learn  
   https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/inspect-message-attachments
 
----
+
 ---
 # 3. RejectDirectSend en Exchange Online
 ---
@@ -232,8 +219,6 @@ Verificación:
 ```powershell
 Get-OrganizationConfig | Select RejectDirectSend
 ```
-
----
 ---
 
 # 4. SPF, DKIM, DMARC y MTA-STS
@@ -454,7 +439,6 @@ Puedes validar SPF, DKIM, DMARC y MTA-STS con el siguiente script:
 
 [Domain-Health-Check.ps1](https://github.com/watchdogcode/gol2026/blob/V2.1/MDO/Scripts/Domain-Health-Check.ps1)
 
----
 ---
 
 # 5. ¿Qué es un “parked domain”?
