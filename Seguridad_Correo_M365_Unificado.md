@@ -11,6 +11,16 @@
 ---
 ----
 
+---
+``
+
+
+***
+``
+
+___
+``
+
 ## Índice
 1. [Introducción](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#introducci%C3%B3n)
 2. Reglas básicas de flujo de correo – Microsoft 365
