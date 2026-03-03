@@ -8,8 +8,8 @@
 **Nivel:** Técnico / Operativo (Enterprise)  
 **Marco:** Zero Trust – Mail Flow Security
 
----
-----
+==============================
+``
 
 ---
 ``
