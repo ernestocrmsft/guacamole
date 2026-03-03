@@ -21,6 +21,7 @@
 
 
 ---
+---
 # 1. Introducción
 
 Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo de Direct Send** y las correctas configuraciones de **SPF, DKIM, DMARC y MTA‑STS**, permiten:
@@ -34,6 +35,7 @@ Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo 
 
 ---
 > Este setup básico establece los controles mínimos necesarios para proteger la identidad del dominio y garantizar una comunicación de correo electrónico segura y confiable.
+---
 ---
 
 # 2. Reglas básicas de flujo de correo – Microsoft 365
@@ -49,8 +51,7 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
 
 ## Regla de flujo de correo para bloquear correos enviados a mydominio.onmicrosoft.com y mydominio.mail.onmicrosoft.com
 
-### Opción 1: Script automatizado descargue el script que ejecuta esta tarea: 
-[Block-onmicrosoftEmails](https://github.com/ernestocrmsft/guacamole/blob/main/Scripts/Block-OnMicrosoftEmails.ps1)
+### Opción 1: Script automatizado descargue el script que ejecuta esta tarea: [Block-onmicrosoftEmails](https://github.com/ernestocrmsft/guacamole/blob/main/Scripts/Block-OnMicrosoftEmails.ps1)
 
 ### Opción 2: Creación manual
 
@@ -86,8 +87,7 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
 
 ## Regla de flujo de correo para bloquear correos que no pueden ser inspeccionados
 
-### Opción 1: Script automatizado descargue el script que ejecuta esta tarea: 
-[Attachments Can’t be inspected](https://github.com/ernestocrmsft/guacamole/blob/main/Scripts/Attachmentscannotbeinspected.ps1)
+### Opción 1: Script automatizado descargue el script que ejecuta esta tarea: [Attachments Can’t be inspected](https://github.com/ernestocrmsft/guacamole/blob/main/Scripts/Attachmentscannotbeinspected.ps1)
 
 ### Opción 2: Creación manual
 
@@ -111,7 +111,8 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
   https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/inspect-message-attachments
 
 ---
-" 3. RejectDirectSend en Exchange Online
+---
+# 3. RejectDirectSend en Exchange Online
 ---
 ## ¿Qué es Direct Send?
 
@@ -223,6 +224,7 @@ Verificación:
 Get-OrganizationConfig | Select RejectDirectSend
 ```
 
+---
 ---
 
 # 4. SPF, DKIM, DMARC y MTA-STS
@@ -443,6 +445,9 @@ Puedes validar SPF, DKIM, DMARC y MTA-STS con el siguiente script:
 
 [Domain-Health-Check.ps1](https://github.com/watchdogcode/gol2026/blob/V2.1/MDO/Scripts/Domain-Health-Check.ps1)
 
+---
+---
+
 # 5. ¿Qué es un “parked domain”?
 
 Un **dominio aparcado** es un dominio que:
@@ -537,6 +542,7 @@ En organizaciones grandes es común:
 
 > Esto es **Shadow IT de identidad y marca**, uno de los riesgos más ignorados en seguridad.
  ---
+---
  # 6. RUNBOOK SOC – Direct Send / RejectDirectSend
 
 ## Objetivo
