@@ -9,6 +9,7 @@
 **Marco:** Zero Trust – Mail Flow Security
 
 ---
+----
 
 ## Índice
 1. [Introducción](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#introducci%C3%B3n)
