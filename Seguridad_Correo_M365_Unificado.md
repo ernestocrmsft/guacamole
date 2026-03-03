@@ -12,11 +12,11 @@
 
 ## Índice
 1. [Introducción](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#introducci%C3%B3n)
-2. Reglas básicas de flujo de correo – Microsoft 365
-3. RejectDirectSend en Exchange Online
-4. SPF, DKIM, DMARC y MTA-STS
-5. Dominios estacionados (Parked Domains)
-6. RUNBOOK SOC – Direct Send / RejectDirectSend
+2. [Reglas básicas de flujo de correo – Microsoft 365](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#2-reglas-b%C3%A1sicas-de-flujo-de-correo--microsoft-365)
+3. [RejectDirectSend en Exchange Online](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#3-rejectdirectsend-en-exchange-online)
+4. [Estándares SPF, DKIM, DMARC y MTA-STS](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#4-est%C3%A1ndares-spf-dkim-dmarc-y-mta-sts)
+5. [Dominios estacionados (Parked Domains)](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#5--dominios-estacionados-parked-domains)
+6. [RUNBOOK SOC – Direct Send / RejectDirectSend](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#6-runbook-soc--direct-send--rejectdirectsend)
 
 ---
 # 1. Introducción
