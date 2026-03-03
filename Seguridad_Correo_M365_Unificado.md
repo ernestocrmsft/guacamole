@@ -11,27 +11,30 @@
 ---
 
 ## Índice
-1. Introducción y Resumen Ejecutivo
+1. [Introducción] (# Introducción)
 2. Reglas básicas de flujo de correo – Microsoft 365
-3. Control de Seguridad: RejectDirectSend en Exchange Online
-4. RUNBOOK SOC – Direct Send / RejectDirectSend
+3. RejectDirectSend en Exchange Online
+4. 
 5. SPF, DKIM, DMARC y MTA-STS
 6. Dominios aparcados (Parked Domains)
+7. RUNBOOK SOC – Direct Send / RejectDirectSend
+
 
 ---
+# Introducción
 
-> Este setup básico establece los controles mínimos necesarios para proteger la identidad del dominio y garantizar una comunicación de correo electrónico segura y confiable.
-
----
-# Linea base de Seguridad
-
-Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo de Direct Send** y las correctas configuraciones de **SPF, DKIM, DMARC y MTA‑STS** , permite:
+Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo de Direct Send** y las correctas configuraciones de **SPF, DKIM, DMARC y MTA‑STS**, permiten:
 
 - Proteger la **marca** y el **dominio**
 - Reducir **phishing** y **spoofing**
 - Asegurar la **entregabilidad** del correo legítimo
 - Evitar el **abuso de dominios técnicos** (por ejemplo: `*.onmicrosoft.com`)
 - Forzar el **cifrado SMTP en tránsito** entre servidores
+- Proteger dominios sin uso
+
+---
+> Este setup básico establece los controles mínimos necesarios para proteger la identidad del dominio y garantizar una comunicación de correo electrónico segura y confiable.
+---
 
 # 1. Reglas básicas de flujo de correo – Microsoft 365
 
@@ -108,7 +111,7 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
   https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/inspect-message-attachments
 
 ---
-" 2. Control de Seguridad: RejectDirectSend en Exchange Online
+" 2. RejectDirectSend en Exchange Online
 ---
 ## ¿Qué es Direct Send?
 
