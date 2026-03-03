@@ -21,7 +21,7 @@
 
 
 ---
-# Introducción
+# 1. Introducción
 
 Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo de Direct Send** y las correctas configuraciones de **SPF, DKIM, DMARC y MTA‑STS**, permiten:
 
@@ -36,7 +36,7 @@ Un setup correcto de **reglas de flujo de correo en Microsoft 365** , **Bloqueo 
 > Este setup básico establece los controles mínimos necesarios para proteger la identidad del dominio y garantizar una comunicación de correo electrónico segura y confiable.
 ---
 
-# 1. Reglas básicas de flujo de correo – Microsoft 365
+# 2. Reglas básicas de flujo de correo – Microsoft 365
 
 A continuación encontrará reglas básicas de flujo de correo que son **altamente recomendadas** agregar para mejorar la postura de seguridad de Microsoft 365.
 
@@ -111,7 +111,7 @@ A continuación encontrará reglas básicas de flujo de correo que son **altamen
   https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/inspect-message-attachments
 
 ---
-" 2. RejectDirectSend en Exchange Online
+" 3. RejectDirectSend en Exchange Online
 ---
 ## ¿Qué es Direct Send?
 
@@ -225,7 +225,7 @@ Get-OrganizationConfig | Select RejectDirectSend
 
 ---
 
-# 3. SPF, DKIM, DMARC y MTA-STS
+# 4. SPF, DKIM, DMARC y MTA-STS
 
 SPF, DKIM, DMARC y MTA-STS son controles fundamentales de seguridad de correo electrónico que protegen a las organizaciones contra suplantación de identidad (spoofing), phishing, fraude y ataques en tránsito, además de asegurar la entregabilidad del correo legítimo.
 
@@ -269,7 +269,7 @@ Resultados posibles:
 - `permerror`
 - `temperror`
 
-#### 3. Acción según resultado
+#### Acción según resultado
 - **pass** → correo aceptado
 - **fail (-all)** → posible rechazo
 - **softfail (~all)** → marcado como sospechoso
@@ -427,7 +427,7 @@ mx: mail.ejemplo.com
 max_age: 604800
 ```
 
-#### 3. TLS Reporting (TLS-RPT)
+####  TLS Reporting (TLS-RPT)
 
 ```
 _smtp._tls.ejemplo.com IN TXT "v=TLSRPTv1; rua=mailto:tlsrpt@ejemplo.com"
@@ -443,7 +443,7 @@ Puedes validar SPF, DKIM, DMARC y MTA-STS con el siguiente script:
 
 [Domain-Health-Check.ps1](https://github.com/watchdogcode/gol2026/blob/V2.1/MDO/Scripts/Domain-Health-Check.ps1)
 
-# 4. ¿Qué es un “parked domain”?
+# 5. ¿Qué es un “parked domain”?
 
 Un **dominio aparcado** es un dominio que:
 - No tiene servicios activos (web, correo, aplicaciones).
@@ -537,7 +537,7 @@ En organizaciones grandes es común:
 
 > Esto es **Shadow IT de identidad y marca**, uno de los riesgos más ignorados en seguridad.
  ---
- # 5. RUNBOOK SOC – Direct Send / RejectDirectSend
+ # 6. RUNBOOK SOC – Direct Send / RejectDirectSend
 
 ## Objetivo
 
