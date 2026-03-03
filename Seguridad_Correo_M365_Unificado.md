@@ -221,7 +221,7 @@ Get-OrganizationConfig | Select RejectDirectSend
 ```
 ---
 
-# 4. SPF, DKIM, DMARC y MTA-STS
+# 4. Estándares SPF, DKIM, DMARC y MTA-STS
 
 SPF, DKIM, DMARC y MTA-STS son controles fundamentales de seguridad de correo electrónico que protegen a las organizaciones contra suplantación de identidad (spoofing), phishing, fraude y ataques en tránsito, además de asegurar la entregabilidad del correo legítimo.
 
@@ -443,7 +443,7 @@ Puedes validar SPF, DKIM, DMARC y MTA-STS con el siguiente script:
 
 # 5.  Dominios estacionados (Parked Domains)
 
-**¿Qué es un “parked domain”?**
+##**¿Qué es un “parked domain”?**
 
 Un **dominio estacionado** es un dominio que:
 - No tiene servicios activos (web, correo, aplicaciones).
