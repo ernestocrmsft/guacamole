@@ -14,11 +14,9 @@
 1. [Introducción](https://github.com/ernestocrmsft/guacamole/blob/main/Seguridad_Correo_M365_Unificado.md#introducci%C3%B3n)
 2. Reglas básicas de flujo de correo – Microsoft 365
 3. RejectDirectSend en Exchange Online
-4. 
-5. SPF, DKIM, DMARC y MTA-STS
-6. Dominios aparcados (Parked Domains)
-7. RUNBOOK SOC – Direct Send / RejectDirectSend
-
+4. SPF, DKIM, DMARC y MTA-STS
+5. Dominios estacionados (Parked Domains)
+6. RUNBOOK SOC – Direct Send / RejectDirectSend
 
 ---
 ---
