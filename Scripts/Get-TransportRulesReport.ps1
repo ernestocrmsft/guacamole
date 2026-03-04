@@ -21,7 +21,7 @@
 
     Autor  : ecobos
     Fecha  : 2026-03-03
-    Versión: 1.0
+    Versión: 1.1
 #>
 
 # ─────────────────────────────────────────────
@@ -549,4 +549,7 @@ Write-Host "   HTML : $htmlPath" -ForegroundColor Cyan
 Write-Host ""
 Write-Host " Total de propiedades exportadas por regla: ~100+" -ForegroundColor DarkGray
 Write-Host ("═" * 100) -ForegroundColor DarkCyan
+Write-Host ""
+Write-Host "chiringuito365.com® | Internal Tools 2026" -ForegroundColor DarkGray
+Write-Host ""
 Write-Host ""
