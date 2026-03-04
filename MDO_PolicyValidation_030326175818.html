@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MDO Policy Validation Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero { background-color: #0078d4; color: white; padding: 35px 20px; border-bottom: 4px solid #005a9e; text-align: center; }
+        .hero h1 { font-size: 1.6rem; font-weight: 600; margin-bottom: 8px; }
+        .hero p { font-size: 0.95rem; font-weight: 400; margin: 2px 0; opacity: 0.9; }
+        .logo-img { max-height: 35px; filter: brightness(0) invert(1); margin-bottom: 10px; }
+        .stat-number { font-size: 2.2rem; font-weight: 800; }
+        .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
+        .table-card { background: white; border: 1px solid #e1e4e8; border-radius: 8px; padding: 25px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .section-divider { border-bottom: 2px solid #0078d4; color: #0078d4; font-weight: bold; margin: 25px 0 15px 0; font-size: 1.15rem; padding-bottom: 5px; }
+        .section-row td { background-color: #e8f4fd !important; font-size: 1rem; padding: 10px 15px !important; border-top: 2px solid #0078d4; }
+        .status-pass { color: #28a745; font-weight: 700; }
+        .status-warn { color: #d39e00; font-weight: 700; }
+        .status-fail { color: #dc3545; font-weight: 700; }
+        .status-info { color: #0078d4; font-weight: 700; }
+        .policy-name { color: #6c757d; font-size: 0.8rem; }
+        .detail-table th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; background-color: #f8f9fa; }
+        .detail-table td { font-size: 0.85rem; vertical-align: middle; }
+        .detail-table code { font-size: 0.8rem; color: #333; background-color: #f0f0f0; padding: 2px 5px; border-radius: 3px; }
+        .progress { border-radius: 10px; background-color: #e9ecef; }
+        .progress-bar { border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+        .card-stat { border-radius: 10px; color: white; padding: 20px; text-align: center; }
+        .link-docs { color: #107c10; text-decoration: none; font-weight: 600; }
+        .link-docs:hover { text-decoration: underline; color: #0b5e0b; }
+        .task-link { transition: background-color 0.2s, transform 0.1s; }
+        .task-link:hover { background-color: #e8f4fd; transform: translateX(4px); border-left: 4px solid #0078d4; }
+        @media print {
+            .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .card-stat { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Header -->
+    <div class="hero">
+        <img src="https://dco.microsoft.com/Images/microsoft-white-logo.png" alt="Microsoft" class="logo-img">
+        <h1>Reporte de Validacion de Politicas MDO</h1>
+        <p>Fecha: 2026-03-03 17:58:18</p>
+        <p>Tenant: <strong>MSFT</strong></p>
+    </div>
+
+    <div class="container-fluid px-4">
+
+        <!-- Dashboard Cards -->
+        <div class="row g-3 mt-3 text-center">
+            <div class="col">
+                <div class="card-stat" style="background-color: #0078d4;">
+                    <div class="stat-label">Total Verificaciones</div>
+                    <div class="stat-number">52</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-stat" style="background-color: #ffc107;">
+                    <div class="stat-label">Cumplimiento</div>
+                    <div class="stat-number">69.2%</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-stat" style="background-color: #28a745;">
+                    <div class="stat-label">Correctas</div>
+                    <div class="stat-number">36</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-stat" style="background-color: #ffc107; color: #333;">
+                    <div class="stat-label">Advertencias</div>
+                    <div class="stat-number">5</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card-stat" style="background-color: #dc3545;">
+                    <div class="stat-label">Fallidas</div>
+                    <div class="stat-number">11</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Policy Summary -->
+        <div class="table-card">
+            <div class="section-divider">&#128202; Resumen por Politica</div>
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Seccion</th>
+                        <th>Politica</th>
+                        <th class="text-center">OK</th>
+                        <th class="text-center">WARN</th>
+                        <th class="text-center">FAIL</th>
+                        <th style="min-width:150px;">Cumplimiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class='table-warning'>
+    <td>Anti-Malware</td>
+    <td><strong>Default</strong></td>
+    <td class='text-center'>3</td>
+    <td class='text-center'>1</td>
+    <td class='text-center'>0</td>
+    <td>
+        <div class='progress' style='height:20px;'>
+            <div class='progress-bar' style='width:75%;background-color:#ffc107;' role='progressbar'>75%</div>
+        </div>
+    </td>
+</tr><tr class='table-danger'>
+    <td>Anti-Phishing</td>
+    <td><strong>Office365 AntiPhish Default</strong></td>
+    <td class='text-center'>5</td>
+    <td class='text-center'>2</td>
+    <td class='text-center'>8</td>
+    <td>
+        <div class='progress' style='height:20px;'>
+            <div class='progress-bar' style='width:33%;background-color:#dc3545;' role='progressbar'>33%</div>
+        </div>
+    </td>
+</tr><tr class='table-danger'>
+    <td>Anti-Spam</td>
+    <td><strong>Default</strong></td>
+    <td class='text-center'>9</td>
+    <td class='text-center'>0</td>
+    <td class='text-center'>1</td>
+    <td>
+        <div class='progress' style='height:20px;'>
+            <div class='progress-bar' style='width:90%;background-color:#28a745;' role='progressbar'>90%</div>
+        </div>
+    </td>
+</tr><tr class='table-success'>
+    <td>ATP Global</td>
+    <td><strong>Configuracion Global</strong></td>
+    <td class='text-center'>3</td>
+    <td class='text-center'>0</td>
+    <td class='text-center'>0</td>
+    <td>
+        <div class='progress' style='height:20px;'>
+            <div class='progress-bar' style='width:100%;background-color:#28a745;' role='progressbar'>100%</div>
+        </div>
+    </td>
+</tr><tr class='table-success'>
+    <td>Connection Filter</td>
+    <td><strong>Default</strong></td>
+    <td class='text-center'>4</td>
+    <td class='text-center'>0</td>
+    <td class='text-center'>0</td>
+    <td>
+        <div class='progress' style='height:20px;'>
+            <div class='progress-bar' style='width:100%;background-color:#28a745;' role='progressbar'>100%</div>
+        </div>
+    </td>
+</tr><tr class='table-warning'>
+    <td>Safe Attachments</td>
+    <td><strong>Built-In Protection Policy</strong></td>
+    <td class='text-center'>2</td>
+    <td class='text-center'>1</td>
+    <td class='text-center'>0</td>
+    <td>
+        <div class='progress' style='height:20px;'>
+            <div class='progress-bar' style='width:67%;background-color:#ffc107;' role='progressbar'>67%</div>
+        </div>
+    </td>
+</tr><tr class='table-danger'>
+    <td>Safe Links</td>
+    <td><strong>Built-In Protection Policy</strong></td>
+    <td class='text-center'>6</td>
+    <td class='text-center'>1</td>
+    <td class='text-center'>2</td>
+    <td>
+        <div class='progress' style='height:20px;'>
+            <div class='progress-bar' style='width:67%;background-color:#ffc107;' role='progressbar'>67%</div>
+        </div>
+    </td>
+</tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detail Table -->
+        <div class="table-card">
+            <div class="section-divider">&#128269; Detalle de Verificaciones (52 checks)</div>
+            <table class="table table-sm table-hover detail-table">
+                <thead>
+                    <tr>
+                        <th style="width:80px;">Estado</th>
+                        <th>Configuracion</th>
+                        <th>Valor Actual</th>
+                        <th>Recomendado</th>
+                        <th>Politica</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class='section-row'><td colspan='5'><strong>Anti-Spam</strong></td></tr>
+<tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>SpamAction</strong></td>
+    <td><code>MoveToJmf</code></td>
+    <td><code>MoveToJmf</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>HighConfidenceSpamAction</strong></td>
+    <td><code>Quarantine</code></td>
+    <td><code>Quarantine</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>PhishSpamAction</strong></td>
+    <td><code>Quarantine</code></td>
+    <td><code>Quarantine</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>HighConfidencePhishAction</strong></td>
+    <td><code>Quarantine</code></td>
+    <td><code>Quarantine</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>BulkSpamAction</strong></td>
+    <td><code>MoveToJmf</code></td>
+    <td><code>MoveToJmf</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>BulkThreshold</strong></td>
+    <td><code>6</code></td>
+    <td><code>5</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>QuarantineRetentionPeriod</strong></td>
+    <td><code>30</code></td>
+    <td><code>30</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>InlineSafetyTipsEnabled</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>SpamZapEnabled</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>PhishZapEnabled</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>AllowedSenders/Domains</strong></td>
+    <td><code>Ninguno</code></td>
+    <td><code>0</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr class='section-row'><td colspan='5'><strong>Anti-Malware</strong></td></tr>
+<tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>ZapEnabled</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableFileFilter</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-warn'>&#9888;&#65039; WARN</td>
+    <td><strong>EnableInternalSenderAdminNotifications</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>FileTypeAction</strong></td>
+    <td><code>54</code></td>
+    <td><code>54</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-info'>&#8505;&#65039; INFO</td>
+    <td><strong>QuarantineTag</strong></td>
+    <td><code>AdminOnlyAccessPolicy</code></td>
+    <td><code>Configurado</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr class='section-row'><td colspan='5'><strong>Anti-Phishing</strong></td></tr>
+<tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>Enabled</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableMailboxIntelligence</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>EnableMailboxIntelligenceProtection</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableSpoofIntelligence</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>EnableOrganizationDomainsProtection</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>AuthenticationFailAction</strong></td>
+    <td><code>MoveToJmf</code></td>
+    <td><code>MoveToJmf</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-warn'>&#9888;&#65039; WARN</td>
+    <td><strong>EnableTargetedUserProtection</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-warn'>&#9888;&#65039; WARN</td>
+    <td><strong>EnableTargetedDomainsProtection</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>PhishThresholdLevel</strong></td>
+    <td><code>1</code></td>
+    <td><code>3</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>EnableSimilarUsersSafetyTips</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>EnableSimilarDomainsSafetyTips</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>EnableUnusualCharactersSafetyTips</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>HonorDmarcPolicy</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>EnableFirstContactSafetyTips</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>MailboxIntelligenceProtectionAction</strong></td>
+    <td><code>NoAction</code></td>
+    <td><code>MoveToJmf</code></td>
+    <td class='policy-name'>Office365 AntiPhish Default</td>
+</tr><tr class='section-row'><td colspan='5'><strong>Safe Links</strong></td></tr>
+<tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableSafeLinksForEmail</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableSafeLinksForTeams</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableSafeLinksForOffice</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>ScanUrls</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>DeliverMessageAfterScan</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>DisableUrlRewrite</strong></td>
+    <td><code>True</code></td>
+    <td><code>False</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-fail'>&#10060; FAIL</td>
+    <td><strong>EnableForInternalSenders</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>TrackClicks</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-warn'>&#9888;&#65039; WARN</td>
+    <td><strong>EnableOrganizationBranding</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>DoNotRewriteUrls</strong></td>
+    <td><code>Ninguna</code></td>
+    <td><code>0 exclusiones</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr class='section-row'><td colspan='5'><strong>Safe Attachments</strong></td></tr>
+<tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>Action</strong></td>
+    <td><code>Block</code></td>
+    <td><code>Block o DynamicDelivery</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>Enable</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>QuarantineTag</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr>
+    <td class='status-warn'>&#9888;&#65039; WARN</td>
+    <td><strong>Redirect</strong></td>
+    <td><code>False</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Built-In Protection Policy</td>
+</tr><tr class='section-row'><td colspan='5'><strong>ATP Global</strong></td></tr>
+<tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableATPForSPOTeamsODB</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Configuracion Global</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableSafeDocs</strong></td>
+    <td><code>True</code></td>
+    <td><code>True</code></td>
+    <td class='policy-name'>Configuracion Global</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>AllowSafeDocsOpen</strong></td>
+    <td><code>False</code></td>
+    <td><code>False</code></td>
+    <td class='policy-name'>Configuracion Global</td>
+</tr><tr class='section-row'><td colspan='5'><strong>Connection Filter</strong></td></tr>
+<tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>IPAllowList</strong></td>
+    <td><code>Vacia</code></td>
+    <td><code>Sin IPs permitidas (ideal)</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-info'>&#8505;&#65039; INFO</td>
+    <td><strong>IPBlockList</strong></td>
+    <td><code>Vacia</code></td>
+    <td><code>Opcional</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>EnableSafeList</strong></td>
+    <td><code>False</code></td>
+    <td><code>False</code></td>
+    <td class='policy-name'>Default</td>
+</tr><tr>
+    <td class='status-pass'>&#9989; PASS</td>
+    <td><strong>DirectoryBasedEdgeBlockMode</strong></td>
+    <td><code>Default</code></td>
+    <td><code>Default</code></td>
+    <td class='policy-name'>Default</td>
+</tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Action Items & Recommendations -->
+        <div class="card shadow-sm border-primary mb-4">
+            <div class="card-header text-white" style="background-color: #0078d4;">&#128221; Documentacion y Recomendaciones Microsoft</div>
+            <div class="card-body">
+                <div class="list-group">
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Recommended settings for EOP and MDO security</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/recommended-settings-for-eop-and-office365" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Configure Anti-Spam policies</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/anti-spam-policies-configure" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Configure Anti-Malware policies</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/anti-malware-policies-configure" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Configure Anti-Phishing policies</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/anti-phishing-policies-mdo-configure" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Configure Safe Links policies</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/safe-links-policies-configure" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Configure Safe Attachments policies</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/safe-attachments-policies-configure" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Configure connection filtering</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/connection-filter-policies-configure" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Tenant Allow/Block List</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/tenant-allow-block-list-about" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Quarantine policies</strong><br>
+                        <small><a href="https://learn.microsoft.com/en-us/defender-office-365/quarantine-policies" target="_blank" class="link-docs">&#128218; Microsoft Learn</a></small>
+                    </div>
+                    <div class="list-group-item task-link">
+                        <strong>&#128279; Microsoft Defender Portal</strong><br>
+                        <small><a href="https://security.microsoft.com/threatpolicy" target="_blank" class="link-docs">&#128218; Threat Policies</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center py-4">
+            <p class="text-muted">chiringuito365.com&reg; | Internal Tools 2026</p>
+        </div>
+
+    </div><!-- /container -->
+</body>
+</html>
